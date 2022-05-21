@@ -17,46 +17,55 @@ const inventory = [
     }
 ]
 
-const cart = [];
 class ClientApp extends Component {
     constructor() {
         super()
         this.state = {
             cartValue: 0
         }
+        this.cart = [];
+
     }
 
-    onAdd = () => {
+    isItemInCart = (item) => {
+        return this.cart.includes(item)
+    }
+
+    onAdd = (item) => {
+        this.cart.push(item)
         this.setState((prev) => {
             return {
                 cartValue: prev.cartValue + 1
             }
         })
     }
-    onRemove = () => {
+
+    onRemove = (item) => {
         const { cartValue } = this.state;
-        if (cartValue > 0) {
+        this.isItemInCart(item);
+        if (this.isItemInCart(item) && cartValue > 0) {
             this.setState((prev) => {
                 return {
                     cartValue: prev.cartValue - 1
                 }
+            }, () => {
+                this.cart.splice(this.cart.findIndex(c => c.id === item.id), 1)
             })
         }
 
     }
 
     renderInventoryList = () => {
-        const { cartValue } = this.state;
         return inventory.map((item, index) => {
             return <div className='inventory-item'>
                 <div>
-                    {item.title}
+                    {item?.title || item?.subtitle || '-'}
                 </div>
                 <div>
-                    Price: Rs. {item.price}
+                    Price: Rs. {item?.price || '-'}
                 </div>
-                <button onClick={this.onAdd}>ADD</button>
-                <button onClick={this.onRemove}>REMOVE</button>
+                <button onClick={() => this.onAdd(item)}>ADD</button>
+                <button onClick={() => this.onRemove(item)}>REMOVE</button>
             </div>
 
         })
