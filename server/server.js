@@ -1,26 +1,67 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const { Inventory } = require('./models/inventory')
 
-const port = process.env.PORT || 4200;
-const app = express();
+const corsMiddleware = require('./middlewares/corsMiddleware');
+const AppRouter = require('./routes/route-config/appRouter');
 
-//SETTING CORS
-const allowCrossDomain = function (req, res, next) {
-  res.header('Access-Control-Allow-Origin', "*");
-  res.header("Access-Control-Allow-Headers", "Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
-  next();
+class BuyMeSomethingApp {
+    constructor() {
+        this.app = express();
+        this.port = process.env.PORT || 4200;
+    }
+
+    configureSecurity() {
+        this.app.use(corsMiddleware);
+        this.app.use(bodyParser.json());
+    }
+
+    startRouter() {
+        try {
+            const _router = new AppRouter();
+            this.app.use('/', [_router.router]);
+        } catch (err) {
+            console.log('startRouter Error. Reason=', err, JSON.stringify(err));
+        }
+    }
+
+    startServer() {
+        this.app.listen(this.port, async (err) => {
+            if (err) throw err;
+            console.log(`Server is up at port ${this.port}`);
+            try {
+                this.configureSecurity();
+
+                // setting up routes
+                this.startRouter();
+            } catch (e) {
+                console.log('Error startServer. Reason=', e, JSON.stringify(e));
+                console.log(' Exiting now...');
+                // db.end();
+                process.exit();
+            }
+        });
+    }
+
+    startApp() {
+        // server start
+        this.startServer();
+    }
+
+    stopApp() {
+        setTimeout(() => {
+            console.log('Stopping server....');
+            process.exit();
+        }, 10 * 1000)
+    }
 }
-app.use(allowCrossDomain);
 
-app.use(bodyParser.json());
+const buyMeSomethingApp = new BuyMeSomethingApp();
 
-app.get('/inventory', (req, res) => {
- res.json({ data: Inventory })
-});
+process.on('uncaughtException', (excp) => {
+    console.log('excp: ', excp);
+    console.log(`UncaughtException occurred! Exception="${excp} || ${JSON.stringify(excp)}" Exiting now...`)
+    buyMeSomethingApp.stopApp
+})
 
-app.listen(port, () => {
-  console.log(`Server is up at port ${port}`);
-});
-
-module.exports = { app };
+buyMeSomethingApp.startApp();
+module.exports = buyMeSomethingApp.app;

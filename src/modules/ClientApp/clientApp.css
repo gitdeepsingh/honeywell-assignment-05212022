@@ -16,10 +16,9 @@ button {
     background: chartreuse;
     font-size: 2rem;
     padding: 1rem;
-    margin: 5rem;
     position: absolute;
-    top: 0;
-    right: 0;
+    top: 3rem;
+    right: 1rem;
 }
 
 button:disabled {
@@ -28,4 +27,11 @@ button:disabled {
 
 .cart-item {
     background-color: aqua;
+}
+
+@media only screen and (max-width: 767px) {
+    .cart {
+        font-size: 1rem;
+        padding: 0;
+    }
 }

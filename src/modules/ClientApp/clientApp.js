@@ -7,11 +7,11 @@ class ClientApp extends Component {
     constructor() {
         super()
         this.state = {
-            inventory: [],
             cartValue: 0,
             loading: false,
             serviceError: false
         }
+        this.inventory = [];
         this.cart = [];
     }
 
@@ -24,7 +24,7 @@ class ClientApp extends Component {
         fetch(`${baseUrl}/inventory`)
             .then(response => response.json())
             .then(data => {
-                this.setState({ inventory: data?.data || [] })
+                this.inventory=data?.Inventory || [];
             }).catch(error => {
                 this.setState({ serviceError: true })
             }).finally(() => {
@@ -60,9 +60,8 @@ class ClientApp extends Component {
     }
 
     renderInventoryList = () => {
-        const { inventory } = this.state;
-        return inventory?.map((item, index) => {
-            return <div className={`inventory-item ${this.isItemInCart(item) ? "cart-item" : ""}`}>
+        return this.inventory?.map((item, index) => {
+            return <div key={item?.id} className={`inventory-item ${this.isItemInCart(item) ? "cart-item" : ""}`}>
                 <div>
                     {item?.title || item?.subtitle || '-'}
                 </div>
@@ -77,10 +76,10 @@ class ClientApp extends Component {
     }
 
     renderResults = () => {
-        const { cartValue, inventory } = this.state;
+        const { cartValue } = this.state;
         return <>
             <div className='inventory-list-viewer'>
-                {inventory.length > 0 ? this.renderInventoryList() : <>No items available at the moment!</>}
+                {this.inventory.length > 0 ? this.renderInventoryList() : <>No items available at the moment!</>}
             </div>
             <div className='cart'>
                 <div> &#8371; CART</div>
