@@ -42,7 +42,6 @@ class ClientApp extends Component {
 
     onRemove = (item) => {
         const { cartValue } = this.state;
-        this.isItemInCart(item);
         if (this.isItemInCart(item) && cartValue > 0) {
             this.setState((prev) => {
                 return {
@@ -57,7 +56,7 @@ class ClientApp extends Component {
 
     renderInventoryList = () => {
         return inventory.map((item, index) => {
-            return <div className='inventory-item'>
+            return <div className={`inventory-item ${this.isItemInCart(item) ? "cart-item" : ""}`}>
                 <div>
                     {item?.title || item?.subtitle || '-'}
                 </div>
