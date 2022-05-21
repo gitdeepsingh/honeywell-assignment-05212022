@@ -69,7 +69,7 @@ class ClientApp extends Component {
                     Price: Rs. {item?.price || '-'}
                 </div>
                 <button onClick={() => this.onAdd(item)}>ADD</button>
-                <button onClick={() => this.onRemove(item)}>REMOVE</button>
+                <button disabled={!this.isItemInCart(item)} onClick={() => this.onRemove(item)}>REMOVE</button>
             </div>
 
         })
