@@ -1,0 +1,13 @@
+.inventory-item {
+    background: wheat;
+    display: flex;
+    flex-direction: column;
+    max-width: 15rem;
+    padding: 1rem;
+    margin: 1rem;
+}
+
+button {
+    cursor: pointer;
+    margin: 0.25rem;
+}

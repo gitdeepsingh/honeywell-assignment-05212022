@@ -1,11 +1,10 @@
+import ClientApp from './modules/ClientApp/clientApp';
 import './App.css';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        BUYMESOMETHING
-      </header>
+    <div className="main-app">
+        <ClientApp />
     </div>
   );
 }
