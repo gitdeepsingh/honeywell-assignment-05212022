@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 
 import './clientApp.css'
 
+const baseUrl = 'http://localhost:4200';
 class ClientApp extends Component {
     constructor() {
         super()
@@ -20,7 +21,7 @@ class ClientApp extends Component {
 
     fetchInventor = () => {
         this.setState({ loading: true })
-        fetch('http://localhost:4200/inventory')
+        fetch(`${baseUrl}/inventory`)
             .then(response => response.json())
             .then(data => {
                 this.setState({ inventory: data?.data || [] })
